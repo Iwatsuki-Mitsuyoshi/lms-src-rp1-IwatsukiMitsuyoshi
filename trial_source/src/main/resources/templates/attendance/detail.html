@@ -72,6 +72,32 @@
 			</table>
 		</div>
 	</div>
+	
+<!-- 過去日未入力確認ダイアログ -->
+<div class="modal fade" id="not-enter-modal">
+	<div class="modal-dialog modal-dialog-center">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">確認</h4>
+			</div>
+
+			<div class="modal-body">
+				<div>過去日の勤怠に未入力があります。</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">
+					OK
+				</button>
+			</div>
+
+		</div>
+	</div>
+</div>
 
 	<script type="text/javascript" th:inline="javascript">
 		$(function() {
@@ -79,6 +105,12 @@
 			setInterval(function() {
 				$("#now").text('現在の時刻は　' + getClock() + '　です。');
 			}, 1000);
+			
+			//過去日の勤怠に未入力がある場合、確認ダイアログを表示
+			
+		if(/*[[${notEnter}]]*/ false){
+			$('#not-enter-modal').modal('show');
+		}
 		});
 		function getClock() {
 			const today =  new Date();

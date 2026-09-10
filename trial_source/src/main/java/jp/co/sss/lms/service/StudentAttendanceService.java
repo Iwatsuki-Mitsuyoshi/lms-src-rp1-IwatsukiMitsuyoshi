@@ -74,6 +74,28 @@ public class StudentAttendanceService {
 	}
 
 	/**
+	 * 過去の未入力チェック
+	 * 
+	 * @return 未入力が存在する場合true,存在しない場合false
+	 * @throws ParseException 
+	 */
+	
+	public Boolean notEnterCheck() throws ParseException{
+		//今日の日付を取得
+		Date trainingDate = dateUtil.parse(dateUtil.toString(new Date()));
+		
+		//過去日の未入力件数を取得
+		Integer notEnterCount = tStudentAttendanceMapper.notEnterCount(
+				loginUserDto.getLmsUserId(), 
+				Constants.DB_FLG_FALSE, 
+				trainingDate);
+		
+		//未入力件数が0より大きい場合true
+		return notEnterCount > 0;
+		
+	} 
+	
+	/**
 	 * 出退勤更新前のチェック
 	 * 
 	 * @param attendanceType
