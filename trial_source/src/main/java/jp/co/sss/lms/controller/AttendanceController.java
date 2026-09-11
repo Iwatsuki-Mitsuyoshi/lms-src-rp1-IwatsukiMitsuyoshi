@@ -33,8 +33,6 @@ public class AttendanceController {
 	/**
 	 * 勤怠管理画面 初期表示
 	 * 
-	 * @param lmsUserId
-	 * @param courseId
 	 * @param model
 	 * @return 勤怠管理画面
 	 * @throws ParseException
@@ -47,7 +45,8 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
-		//過去日の未入力チェック
+		// 岩月 - Task.25
+		// 過去日の未入力チェック
 		Boolean notEnter = studentAttendanceService.notEnterCheck();
 		model.addAttribute("notEnter", notEnter);
 

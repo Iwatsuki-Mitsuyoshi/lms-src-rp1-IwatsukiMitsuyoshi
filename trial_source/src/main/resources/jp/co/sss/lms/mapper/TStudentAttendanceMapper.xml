@@ -40,6 +40,7 @@
 		ORDER BY t2.date ASC
 	</select>
 
+<!-- 岩月 - Task.25 -->
 	<select id="notEnterCount" resultType="java.lang.Integer">
 		SELECT COUNT(*)
 		FROM t_student_attendance

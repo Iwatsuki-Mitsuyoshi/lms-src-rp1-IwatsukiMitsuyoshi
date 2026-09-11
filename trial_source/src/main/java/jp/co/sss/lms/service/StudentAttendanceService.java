@@ -73,6 +73,7 @@ public class StudentAttendanceService {
 		return attendanceManagementDtoList;
 	}
 
+	// 岩月 - Task.25
 	/**
 	 * 過去の未入力チェック
 	 * 

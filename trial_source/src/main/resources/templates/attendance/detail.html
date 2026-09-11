@@ -73,6 +73,7 @@
 		</div>
 	</div>
 	
+<!-- 岩月 - Task.25 -->
 <!-- 過去日未入力確認ダイアログ -->
 <div class="modal fade" id="not-enter-modal">
 	<div class="modal-dialog modal-dialog-center">
@@ -106,7 +107,8 @@
 				$("#now").text('現在の時刻は　' + getClock() + '　です。');
 			}, 1000);
 			
-			//過去日の勤怠に未入力がある場合、確認ダイアログを表示
+			// 岩月 - Task.25
+			// 過去日の勤怠に未入力がある場合、確認ダイアログを表示
 			
 		if(/*[[${notEnter}]]*/ false){
 			$('#not-enter-modal').modal('show');
