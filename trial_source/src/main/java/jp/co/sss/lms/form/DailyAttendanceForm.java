@@ -18,8 +18,21 @@ public class DailyAttendanceForm {
 	private String trainingDate;
 	/** 出勤時間 */
 	private String trainingStartTime;
+	
+	/** Task.26 岩月 出退勤時間の入力方法変更　ここから*/
+	/** 出勤時間(時) */
+	private Integer trainingStartTimeHour;
+	/** 出勤時間 (分)*/
+	private Integer trainingStartTimeMinute;
+	//Task.26 岩月 出退勤時間の入力方法変更　ここまで
 	/** 退勤時間 */
 	private String trainingEndTime;
+	//Task.26 岩月 出退勤時間の入力方法変更　ここから
+	/** 退勤時間 (時)*/
+	private Integer trainingEndTimeHour;
+	/** 退勤時間 (分)*/
+	private Integer trainingEndTimeMinute;
+	//Task.26 岩月 出退勤時間の入力方法変更　ここまで
 	/** 中抜け時間 */
 	private Integer blankTime;
 	/** 中抜け時間（画面表示用） */

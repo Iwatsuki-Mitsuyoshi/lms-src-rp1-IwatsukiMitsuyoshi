@@ -132,6 +132,82 @@ public class AttendanceUtil {
 		return map;
 	}
 
+	//Task.26 出退勤時間の入力方法変更　ここから
+	/**
+	 * 
+	 * 時間のプルダウンカップを生成
+	 * 
+	 * @return 1時間刻みの時間マップ
+	 * 
+	 */
+	
+	public LinkedHashMap<Integer,String> getHourMap(){
+		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		map.put(null, "");
+		
+		for(int i =0; i < 24; i++) {
+			
+		map.put(i,String.format("%02d", i));
+		
+		}
+		
+		return map;
+		
+	}
+	
+	/**
+	 * 
+	 * 分のプルダウンカップを生成
+	 * 
+	 * @return 分刻みの時間マップ
+	 * 
+	 */
+	public LinkedHashMap<Integer,String> getMinuteMap(){
+		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		map.put(null, "");
+		
+		for(int i =0; i < 60; i++) {
+			
+		map.put(i,String.format("%02d", i));
+		
+		}
+		
+		return map;
+		
+	}
+	
+	/**
+	 * 
+	 * 時間の切り出し
+	 * 
+	 * @param time 開始時刻or終了時刻
+	 * @return 出退勤時間（時間）
+	 * 
+	 */
+	public Integer getHour(String time) {
+		//Task.26 主退勤時間の入力方法変更　ここから
+		Integer hour = Integer.parseInt(time.substring(0, 2));
+		return hour;
+		//Task.26 主退勤時間の入力方法変更　ここまで
+		
+	}
+	
+	/**
+	 * 
+	 * 時間（分）の切り出し
+	 * 
+	 * @param time 開始時刻or終了時刻
+	 * @return 出退勤時間（分）
+	 * 
+	 */
+	public Integer getMinute(String time) {
+		//Task.26 主退勤時間の入力方法変更　ここから
+		Integer minute = Integer.parseInt(time.substring(3, 5));
+		return minute;
+		//Task.26 主退勤時間の入力方法変更　ここまで
+		
+	}
+	
 	/**
 	 * 研修日の判定
 	 * 

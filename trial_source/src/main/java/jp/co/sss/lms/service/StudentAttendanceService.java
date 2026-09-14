@@ -242,6 +242,9 @@ public class StudentAttendanceService {
 		attendanceForm.setUserName(loginUserDto.getUserName());
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+		// 岩月 - Task.26 時間・分プルダウン用マップの設定を追加
+		attendanceForm.setHourMap(attendanceUtil.getHourMap());
+		attendanceForm.setMinuteMap(attendanceUtil.getMinuteMap());
 
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
@@ -261,6 +264,24 @@ public class StudentAttendanceService {
 			dailyAttendanceForm
 					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
+			
+			// 岩月 - Task.26 出勤・退勤時間を時と分に分割してフォームへ設定する処理を追加
+			if(attendanceManagementDto.getTrainingStartTime() != null
+					&& !attendanceManagementDto.getTrainingStartTime().isEmpty()) {
+				dailyAttendanceForm.setTrainingStartTimeHour(
+						attendanceUtil.getHour(attendanceManagementDto.getTrainingStartTime()));
+				dailyAttendanceForm.setTrainingStartTimeMinute(
+						attendanceUtil.getMinute(attendanceManagementDto.getTrainingStartTime()));				
+			}
+			
+			if(attendanceManagementDto.getTrainingEndTime() != null
+					&& !attendanceManagementDto.getTrainingEndTime().isEmpty()) {
+				dailyAttendanceForm.setTrainingEndTimeHour(
+						attendanceUtil.getHour(attendanceManagementDto.getTrainingEndTime()));
+				dailyAttendanceForm.setTrainingEndTimeMinute(
+						attendanceUtil.getMinute(attendanceManagementDto.getTrainingEndTime()));				
+			}
+			
 			if (attendanceManagementDto.getBlankTime() != null) {
 				dailyAttendanceForm.setBlankTime(attendanceManagementDto.getBlankTime());
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
