@@ -301,6 +301,37 @@ public class StudentAttendanceService {
 		return attendanceForm;
 	}
 
+	//岩月 - Task.26 主退勤時間の時・分をhh:mm形式に変換する処理を追加
+	/**
+	 * 入力された主退勤時間の時・分をhh:mm形式に変換
+	 * 
+	 * @param attendanceForm 勤怠フォーム
+	 * 
+	 */
+	public void formatConversion(AttendanceForm attendanceForm) {
+		
+		for(DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
+			
+			// 出勤時間の時・分が両方入力されている場合、hh:mm形式に変換
+			
+			if(dailyAttendanceForm.getTrainingStartTimeHour() != null && dailyAttendanceForm.getTrainingStartTimeMinute() != null) {
+				
+				dailyAttendanceForm.setTrainingStartTime(
+						String.format("%02d:%02d", dailyAttendanceForm.getTrainingStartTimeHour(), dailyAttendanceForm.getTrainingStartTimeMinute()));
+		}
+		
+		// 退勤時間の時・分が両方入力されている場合、hh:mm形式に変換
+		
+		if(dailyAttendanceForm.getTrainingEndTimeHour() != null && dailyAttendanceForm.getTrainingEndTimeMinute() != null) {
+		
+			dailyAttendanceForm.setTrainingEndTime(
+					String.format("%02d:%02d",
+							dailyAttendanceForm.getTrainingEndTimeHour(),
+							dailyAttendanceForm.getTrainingEndTimeMinute()));
+			}
+		}
+	}
+	
 	/**
 	 * 勤怠登録・更新処理
 	 * 

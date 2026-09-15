@@ -24,16 +24,19 @@
 			<form th:action="@{/attendance/update}" method="post">
 				<table class="table table-hover dataTable no-footer">
 					<thead>
-						<tr>
-							<th class="w140">日付</th>
-							<th class="w300">コース内容</th>
-							<th class="w70">出勤</th>
-							<th class="w70">退勤</th>
-							<th class="w80">中抜け時間</th>
-							<th class="w70">ステータス</th>
-							<th class="w240">備考</th>
-						</tr>
-					</thead>
+	<tr>
+		<th class="w140">日付</th>
+		<th class="w300">コース内容</th>
+
+		<!-- 岩月 - Task.26 出退勤時間のプルダウン化に伴い各列の表示幅を調整 -->
+		<th style="min-width: 155px;">出勤</th>
+		<th style="min-width: 155px;">退勤</th>
+		<th style="min-width: 120px;">中抜け時間</th>
+		<th style="min-width: 90px;">ステータス</th>
+
+		<th class="w240">備考</th>
+	</tr>
+</thead>
 					<tbody>
 						<th:block th:each="dailyAttendanceForm, stat : *{attendanceForm.attendanceList}">
 							<tr>
@@ -47,21 +50,74 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
-								<td class="w70">
-									<input type="text" th:name="|attendanceList[${stat.index}].trainingStartTime|"
-									th:value="${dailyAttendanceForm.trainingStartTime}" class="form-control" />
-								</td>
-								<td class="w70">
-									<input type="text" th:name="|attendanceList[${stat.index}].trainingEndTime|"
-									th:value="${dailyAttendanceForm.trainingEndTime}" class="form-control" />
-								</td>
-								<td class="w80">
-									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
-										<option th:each="blankTime : ${attendanceForm.blankTimes}" th:value="${blankTime.key}" th:inlne="text" class="form-control" 
-											th:selected="${blankTime.key == dailyAttendanceForm.blankTime}">[[${blankTime.value}]]</option>
-									</select>
-								</td>
-								<td class="w70">[[${dailyAttendanceForm.statusDispName}]]</td>
+<!-- 岩月 - Task.26 出勤時間を見やすい時・分プルダウン表示に変更 -->
+<td style="min-width: 155px; white-space: nowrap;">
+	<div style="display: flex; align-items: center; gap: 5px;">
+		<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|"
+				class="form-control"
+				style="width: 68px; min-width: 68px; flex-shrink: 0;">
+			<option th:each="hour : ${attendanceForm.hourMap}"
+					th:value="${hour.key}"
+					th:selected="${hour.key == dailyAttendanceForm.trainingStartTimeHour}">
+				[[${hour.value}]]
+			</option>
+		</select>
+
+		<span>:</span>
+
+		<select th:name="|attendanceList[${stat.index}].trainingStartTimeMinute|"
+				class="form-control"
+				style="width: 68px; min-width: 68px; flex-shrink: 0;">
+			<option th:each="minute : ${attendanceForm.minuteMap}"
+					th:value="${minute.key}"
+					th:selected="${minute.key == dailyAttendanceForm.trainingStartTimeMinute}">
+				[[${minute.value}]]
+			</option>
+		</select>
+	</div>
+</td>
+
+<!-- 岩月 - Task.26 退勤時間を見やすい時・分プルダウン表示に変更 -->
+<td style="min-width: 155px; white-space: nowrap;">
+	<div style="display: flex; align-items: center; gap: 5px;">
+		<select th:name="|attendanceList[${stat.index}].trainingEndTimeHour|"
+				class="form-control"
+				style="width: 68px; min-width: 68px; flex-shrink: 0;">
+			<option th:each="hour : ${attendanceForm.hourMap}"
+					th:value="${hour.key}"
+					th:selected="${hour.key == dailyAttendanceForm.trainingEndTimeHour}">
+				[[${hour.value}]]
+			</option>
+		</select>
+
+		<span>:</span>
+
+		<select th:name="|attendanceList[${stat.index}].trainingEndTimeMinute|"
+				class="form-control"
+				style="width: 68px; min-width: 68px; flex-shrink: 0;">
+			<option th:each="minute : ${attendanceForm.minuteMap}"
+					th:value="${minute.key}"
+					th:selected="${minute.key == dailyAttendanceForm.trainingEndTimeMinute}">
+				[[${minute.value}]]
+			</option>
+		</select>
+	</div>
+</td>
+								
+								<td style="min-width: 120px;">
+	<select th:name="|attendanceList[${stat.index}].blankTime|"
+			class="form-control">
+		<option th:each="blankTime : ${attendanceForm.blankTimes}"
+				th:value="${blankTime.key}"
+				th:selected="${blankTime.key == dailyAttendanceForm.blankTime}">
+			[[${blankTime.value}]]
+		</option>
+	</select>
+</td>
+
+<td style="min-width: 90px;">
+	[[${dailyAttendanceForm.statusDispName}]]
+</td>
 								<td class="w240">
 									<input type="text" th:name="|attendanceList[${stat.index}].note|" th:value="${dailyAttendanceForm.note}" class="form-control"></input>
 								</td>
