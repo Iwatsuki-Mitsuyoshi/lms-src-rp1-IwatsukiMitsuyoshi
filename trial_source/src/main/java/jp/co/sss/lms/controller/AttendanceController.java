@@ -14,6 +14,7 @@ import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
+import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
 
 /**
@@ -29,6 +30,8 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
+	@Autowired
+	private AttendanceUtil attendanceUtil;
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -139,6 +142,23 @@ public class AttendanceController {
 		//岩月 - Task26 主退勤時間の時・分をhh:mm形式に変換する処理を追加
 		studentAttendanceService.formatConversion(attendanceForm);
 
+		//岩月 - Task.27
+		//勤怠更新時の入力チェック
+		studentAttendanceService.updateInputCheck(attendanceForm, result);
+		
+		//入力エラーがある場合
+		if(result.hasErrors()) {
+			//画面再表示用のプルダウンを再設定
+			attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+			attendanceForm.setHourMap(attendanceUtil.getHourMap());
+			attendanceForm.setMinuteMap(attendanceUtil.getMinuteMap());
+			
+			model.addAttribute("attendanceForm", attendanceForm);
+			
+			return "attendance/update";
+			
+		}
+		
 		// 更新
 		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);

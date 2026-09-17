@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
@@ -331,6 +333,123 @@ public class StudentAttendanceService {
 			}
 		}
 	}
+	
+	//岩月 - Task.27
+	/**
+	 * 勤怠更新時の入力チェック
+	 * 
+	 * @param attendanceForm 勤怠フォーム
+	 * @param result 入力チェック結果
+	 */
+	
+	public void updateInputCheck(AttendanceForm attendanceForm, BindingResult result) {
+		
+		if(attendanceForm.getAttendanceList() == null) {
+			return;
+		}		
+		
+		for(int i = 0; i < attendanceForm.getAttendanceList().size(); i++) {
+			
+			DailyAttendanceForm dailyAttendanceForm =
+				attendanceForm.getAttendanceList().get(i);
+			
+			String fieldPrefix = "attendanceList[" + i + "].";
+			
+			//備考が100文字を超えている場合
+			if(dailyAttendanceForm.getNote() != null
+					&& dailyAttendanceForm.getNote().length() > 100) {
+				
+				result.addError(new FieldError(
+						result.getObjectName(),
+						fieldPrefix + "note",
+						messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
+								new String[] {"備考" , "100"})));			
+				}	
+			boolean startHourEntered =
+					dailyAttendanceForm.getTrainingStartTimeHour() != null;
+			boolean startMinuteEntered =
+					dailyAttendanceForm.getTrainingStartTimeMinute() != null;
+			boolean endHourEntered =
+					dailyAttendanceForm.getTrainingEndTimeHour() != null;
+			boolean endMinuteEntered =
+					dailyAttendanceForm.getTrainingEndTimeMinute() != null;
+			
+			//出勤時間の「時」「分」の片方だけが入力されている場合
+			if(startHourEntered != startMinuteEntered) {
+				result.addError(new FieldError(
+						result.getObjectName(),
+						fieldPrefix + "trainingStartTimeHour",
+						messageUtil.getMessage(Constants.INPUT_INVALID,
+								new String[] {"出勤時間"})));	
+			}
+			
+			//退勤時間の「時」「分」の片方だけが入力されている場合
+			if(endHourEntered != endMinuteEntered) {
+				result.addError(new FieldError(
+						result.getObjectName(),
+						fieldPrefix + "trainingEndTimeHour",
+						messageUtil.getMessage(Constants.INPUT_INVALID,
+								new String[] {"退勤時間"})));
+			}
+			
+			boolean startTimeEntered = startHourEntered && startMinuteEntered;
+			boolean endTimeEntered = endHourEntered && endMinuteEntered;
+			
+			//出勤時間が未入力で、退勤時間だけが入力されている場合
+			if(!startTimeEntered && endTimeEntered) {
+				
+				result.addError(new FieldError(
+						result.getObjectName(),
+						fieldPrefix + "trainingEndTimeHour",
+						messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY)));
+			}
+			
+			//出勤時間と退勤時間が両方入力されている場合
+			if(startTimeEntered && endTimeEntered) {
+				
+				TrainingTime trainingStarTime = new TrainingTime(
+						dailyAttendanceForm.getTrainingStartTimeHour(),
+						dailyAttendanceForm.getTrainingStartTimeMinute());
+				
+				TrainingTime trainingEndTime = new TrainingTime(
+						dailyAttendanceForm.getTrainingEndTimeHour(),
+						dailyAttendanceForm.getTrainingEndTimeMinute());
+				
+			//出勤時間が退勤時間より後の場合
+			if(trainingStarTime.compareTo(trainingEndTime) > 0) {
+				
+				result.addError(new FieldError(
+						result.getObjectName(),
+						fieldPrefix + "trainingEndTimeHour",
+						messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
+								new String[] {String.valueOf(i)})));
+			}
+			//中抜け時間が入力されている場合
+			if(dailyAttendanceForm.getBlankTime() != null) {
+				
+				TrainingTime trainingTime = attendanceUtil.calcJukoTime(
+						trainingStarTime, trainingEndTime);
+				
+				TrainingTime blankTime = attendanceUtil.calcBlankTime(
+						dailyAttendanceForm.getBlankTime());
+			//中抜け時間が勤務時間を超えている場合
+				if(blankTime.compareTo(trainingTime) > 0) {
+				
+				result.addError(new FieldError(
+					result.getObjectName(),
+					fieldPrefix + "blankTime",
+					messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR)));
+				}
+				
+			}
+			
+		}
+			
+			
+			
+	}
+		
+}
 	
 	/**
 	 * 勤怠登録・更新処理

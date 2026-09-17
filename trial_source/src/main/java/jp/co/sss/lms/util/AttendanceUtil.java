@@ -86,6 +86,22 @@ public class AttendanceUtil {
 		return total;
 	}
 
+	// 岩月 - Task.27
+	/**
+	 * 出勤時間と退勤時間から勤務時間を算出
+	 *
+	 * @param trainingStartTime 出勤時間
+	 * @param trainingEndTime 退勤時間
+	 * @return 勤務時間
+	 */
+	
+	public TrainingTime calcJukoTime(
+			TrainingTime trainingStartTime,
+			TrainingTime trainingEndTime
+			) {
+		return trainingEndTime.subtract(trainingStartTime);
+	}
+	
 	/**
 	 * 時刻分を丸めた本日日付を取得
 	 * 
