@@ -75,10 +75,9 @@ public class StudentAttendanceService {
 		return attendanceManagementDtoList;
 	}
 
-	// 岩月 - Task.25
 	/**
 	 * 過去の未入力チェック
-	 * 
+	 * @author 岩月 - Task.25
 	 * @return 未入力が存在する場合true、存在しない場合false
 	 * @throws ParseException 
 	 */

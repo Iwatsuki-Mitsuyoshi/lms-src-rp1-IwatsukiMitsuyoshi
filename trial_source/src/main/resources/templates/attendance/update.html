@@ -35,6 +35,8 @@
 	<tr>
 		<th class="w140">日付</th>
 		<th class="w300">コース内容</th>
+		<!-- 岩月 - Task.28 定時ボタン用の列 -->
+		<th class ="w60"></th>
 
 		<!-- 岩月 - Task.26 出退勤時間のプルダウン化に伴い各列の表示幅を調整 -->
 		<th style="min-width: 155px;">出勤</th>
@@ -59,6 +61,14 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
+								
+								<!-- 岩月 - Task.28 定時ボタン -->
+								<td class = "w60">
+									<input type="button"
+									 class="btn btn-success"
+									 value="定時"
+									 onclick="setRegularTime(this)"/>
+								</td>
 <!-- 岩月 - Task.26 出勤時間を見やすい時・分プルダウン表示に変更 -->
 <td style="min-width: 155px; white-space: nowrap;">
 	<div style="display: flex; align-items: center; gap: 5px;">
@@ -155,6 +165,27 @@
 			return confirm("更新します。よろしいですか？")
 		}
 	</script>
+	<!-- 岩月 - Task.28 定時ボタン -->
+	<script type="text/javascript">
+    function setRegularTime(button) {
+        const row = button.closest("tr");
+
+        setTime(row, "trainingStartTimeHour", 9);
+        setTime(row, "trainingStartTimeMinute", 0);
+        setTime(row, "trainingEndTimeHour", 18);
+        setTime(row, "trainingEndTimeMinute", 0);
+    }
+
+    function setTime(row, fieldName, time) {
+        const select = row.querySelector('select[name$=".' + fieldName + '"]');
+        const option = Array.from(select.options).find(
+            item => item.value !== "" && Number(item.value) === time
+        );
+        if (option) {
+            select.value = option.value;
+        }
+    }
+</script>
 
 </body>
 </html>
